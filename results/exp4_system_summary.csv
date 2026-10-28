@@ -1,0 +1,4 @@
+Method,Step size,Final radius
+Euler,0.1,1.366029337913563
+RK4,0.1,0.9999995699949359
+Exact,0.1,1.0
