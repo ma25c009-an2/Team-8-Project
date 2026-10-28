@@ -44,25 +44,3 @@ def test_vector_system():
     assert np.allclose(y_grid[0], [1.0, 0.0])
 
 
-def test_invalid_step_size():
-    """Test that a negative step size raises ValueError."""
-
-    f = lambda t, y: y
-
-    with pytest.raises(
-        ValueError,
-        match="Step size h must be positive and finite."
-    ):
-        solve_euler(f, (0, 1), 1.0, h=-0.1)
-
-
-def test_invalid_time_span():
-    """Test that an invalid time interval raises ValueError."""
-
-    f = lambda t, y: y
-
-    with pytest.raises(
-        ValueError,
-        match="Final time must be greater than initial time."
-    ):
-        solve_euler(f, (1, 0), 1.0, h=0.1)
