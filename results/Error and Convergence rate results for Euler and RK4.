@@ -1,1 +1,135 @@
 
+import sys
+import csv
+from pathlib import Path
+
+import numpy as np
+
+# Make the project root available for imports
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from ode_solver.euler import solve_euler
+from ode_solver.rk4 import solve_rk4
+from ode_solver.error import (
+    max_absolute_error,
+    observed_convergence_rate,
+)
+
+
+def scalar_problem(t, y):
+    return y
+
+
+def scalar_exact(t):
+    return np.exp(t)
+
+
+def oscillator_problem(t, y):
+    return np.array([y[1], -y[0]])
+
+
+def oscillator_exact(t):
+    return np.column_stack((np.cos(t), -np.sin(t)))
+
+
+def analyse_method(solver, method_name, problem_name,
+                   f, exact, t_span, y0, h_values):
+
+    errors = []
+
+    for h in h_values:
+        t_grid, y_grid = solver(f, t_span, y0, h)
+        y_exact = exact(t_grid)
+
+        error = max_absolute_error(y_grid, y_exact)
+        errors.append(error)
+
+    rates = observed_convergence_rate(h_values, errors)
+
+    rows = []
+
+    for i, h in enumerate(h_values):
+        rate = "" if i == 0 else rates[i - 1]
+
+        rows.append({
+            "method": method_name,
+            "problem": problem_name,
+            "step_size": h,
+            "maximum_absolute_error": errors[i],
+            "observed_order": rate,
+        })
+
+    return rows
+
+
+def main():
+
+    scalar_steps = [0.2, 0.1, 0.05, 0.025]
+
+    oscillator_steps = [
+        2 * np.pi / 20,
+        2 * np.pi / 40,
+        2 * np.pi / 80,
+        2 * np.pi / 160,
+    ]
+
+    all_results = []
+
+    methods = [
+        (solve_euler, "Euler"),
+        (solve_rk4, "RK4"),
+    ]
+
+    for solver, method_name in methods:
+
+        all_results.extend(
+            analyse_method(
+                solver, method_name, "Scalar ODE",
+                scalar_problem, scalar_exact,
+                (0.0, 1.0), 1.0, scalar_steps
+            )
+        )
+
+        all_results.extend(
+            analyse_method(
+                solver, method_name, "Harmonic Oscillator",
+                oscillator_problem, oscillator_exact,
+                (0.0, 2 * np.pi), np.array([1.0, 0.0]),
+                oscillator_steps
+            )
+        )
+
+    output_file = ROOT / "results" / "convergence_results.csv"
+
+    with open(output_file, "w", newline="") as file:
+        writer = csv.DictWriter(
+            file,
+            fieldnames=[
+                "method",
+                "problem",
+                "step_size",
+                "maximum_absolute_error",
+                "observed_order",
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(all_results)
+
+    print("\nCONVERGENCE ANALYSIS RESULTS\n")
+
+    for row in all_results:
+        print(
+            f"{row['method']:6} | "
+            f"{row['problem']:22} | "
+            f"h = {row['step_size']:.7f} | "
+            f"Error = {row['maximum_absolute_error']:.8e} | "
+            f"Order = {row['observed_order']}"
+        )
+
+    print(f"\nResults saved to: {output_file}")
+
+
+if __name__ == "__main__":
+    main()
+
