@@ -1,0 +1,50 @@
+Experimental Analysis of Euler's Method and RK4.
+1. Objective
+The objective of this experiment is to compare the accuracy and convergence behaviour of Euler's method and the fourth-order Runge-Kutta method (RK4). Both methods were tested on a scalar ODE and a harmonic oscillator using different step sizes. The maximum absolute error and observed convergence orders were calculated to verify their theoretical accuracy.
+2. Experimental Results and Analysis
+
+2.1 Euler's Method – Scalar ODE
+
+The maximum absolute error decreases from 0.22996 at a step size of 0.2 to 0.03322 at a step size of 0.025.
+
+The observed convergence orders are 0.8848, 0.9384 and 0.9681. These values progressively approach 1, confirming the expected first-order convergence of Euler's method.
+
+2.2 Euler's Method – Harmonic Oscillator
+
+The maximum absolute error decreases from 1.51445 at a step size of approximately 0.3142 to 0.13119 at a step size of approximately 0.0393.
+
+The observed convergence orders are 1.2743, 1.1673 and 1.0874. Although the initial values are slightly higher than 1, they gradually approach 1 as the step size decreases. This confirms the expected first-order convergence behaviour.
+
+2.3 RK4 – Scalar ODE
+
+RK4 produces significantly smaller errors compared to Euler's method. The maximum absolute error decreases from approximately 3.07 × 10⁻⁵ at a step size of 0.2 to 8.67 × 10⁻⁹ at a step size of 0.025.
+
+The observed convergence orders are 3.8802, 3.9400 and 3.9700. These values approach 4, confirming the expected fourth-order convergence of RK4.
+
+2.4 RK4 – Harmonic Oscillator
+
+The maximum absolute error decreases from approximately 4.92 × 10⁻⁴ at a step size of 0.3142 to 1.24 × 10⁻⁷ at a step size of 0.0393.
+
+The observed convergence orders are 3.9611, 3.9904 and 3.9976. These values are extremely close to 4, demonstrating excellent agreement with the theoretical fourth-order convergence of RK4.
+
+3. Comparison of the Methods
+
+The experiments clearly demonstrate the difference in accuracy between the two methods.
+
+Euler's method exhibits first-order convergence for both test problems, whereas RK4 exhibits fourth-order convergence.
+
+When the step size is halved, Euler's method approximately halves its error, while RK4 reduces its error by a factor close to 16. This explains why RK4 achieves considerably higher accuracy for the same step size.
+
+For the scalar ODE, RK4 produces an error approximately 7,493 times smaller than Euler's method at the largest tested step size. For the harmonic oscillator, the corresponding improvement is approximately 3,078 times.
+
+Although RK4 requires more function evaluations per step, its significantly faster convergence makes it considerably more accurate for these experiments.
+
+4. Conclusion
+
+The experimental results successfully verify the theoretical convergence properties of both numerical methods.
+
+Euler's method demonstrates approximately first-order convergence, with observed orders approaching 1 as the step size decreases. RK4 demonstrates approximately fourth-order convergence, with observed orders approaching 4 for both test problems.
+
+In particular, the harmonic oscillator experiment with RK4 achieves an observed convergence order of 3.9976, showing excellent agreement with theoretical predictions.
+
+Overall, the experiments demonstrate that reducing the step size improves accuracy for both methods, but RK4 achieves a substantially faster reduction in maximum absolute error. The results confirm the superior accuracy and convergence behaviour of RK4 compared with Euler's method.
